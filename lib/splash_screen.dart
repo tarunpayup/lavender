@@ -1,42 +1,49 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:lavender_app/auth_screen.dart';
+import 'dart:async';
+import 'auth_screen.dart';
 
-class SplashScreen extends StatefulWidget{
+class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>{
+class _SplashScreenState extends State<SplashScreen> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    Timer(Duration(seconds: 3),(){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AuthScreen()));
+    Timer(Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => AuthScreen()));
     });
   }
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFFE1BEE7),
-              Color(0xFFCE93D8)
-              ],
-              begin: Alignment.topLeft,end: Alignment.topRight
-              )),
+            colors: [Color(0xFFE1BEE7), Color(0xFFCE93D8)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.spa,size: 100,color: Colors.white,),
-              SizedBox(height: 20,),
-              Text("Lavender Floral",style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold,color: Colors.white),)
-              
-              ],
+              Icon(Icons.spa, size: 100, color: Colors.white),
+              SizedBox(height: 20),
+              Text(
+                'Lavender App',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: 1.5,
+                ),
+              ),
+            ],
           ),
         ),
       ),
