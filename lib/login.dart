@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lavender_app/dashboard.dart';
 
 class LoginTab extends StatefulWidget {
   @override
@@ -25,6 +26,7 @@ class _LoginTabState extends State<LoginTab> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Login Successful")),
         );
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>Dashboard()));
       } else if (response.body.contains("error")) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Invalid Credentials")),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:lavender_app/dashboard.dart';
+
 class SignupTab extends StatefulWidget {
   @override
   _SignupTabState createState() => _SignupTabState();
@@ -35,6 +37,7 @@ class _SignupTabState extends State<SignupTab> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Signup Successful")),
         );
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>Dashboard()));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(body['message'] ?? "Signup Failed")),
