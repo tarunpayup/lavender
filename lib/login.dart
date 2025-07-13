@@ -35,12 +35,10 @@ class _LoginTabState extends State<LoginTab> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Unexpected Error")),
         );
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>Dashboard()));
       }
     } catch (e) {
       print("Exception: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Network Error")),
-      );
     }
   }
 
