@@ -1,6 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:lavender_app/dashboard.dart';
+import 'package:lavender_app/dashboard.dart'; // Adjust the import path as per your file structure
 
 class LoginTab extends StatefulWidget {
   @override
@@ -8,37 +9,61 @@ class LoginTab extends StatefulWidget {
 }
 
 class _LoginTabState extends State<LoginTab> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool isLoading = false;
 
   Future<void> loginUser() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please enter both email and password")),
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
     try {
       final response = await http.post(
         Uri.parse("https://www.tarunbansal.co.in/android/flutter/login.php"),
-        body: {
-          "email": emailController.text.trim(),
-          "password": passwordController.text.trim(),
-        },
+        body: {"email": email, "password": password},
       );
 
-      if (response.statusCode == 200 && response.body.contains("success")) {
-        print("Login Success - ${response.body}");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Login Successful")),
-        );
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>Dashboard()));
-      } else if (response.body.contains("error")) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Invalid Credentials")),
-        );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body); // Decode JSON
+
+        if (data["status"] == "success") {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Login Successful")),
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Invalid Credentials")),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Unexpected Error")),
+          SnackBar(content: Text("Server error: ${response.statusCode}")),
         );
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>Dashboard()));
       }
     } catch (e) {
       print("Exception: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Connection failed. Try again later.")),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -47,24 +72,41 @@ class _LoginTabState extends State<LoginTab> {
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(
-                  labelText: "Email", border: OutlineInputBorder()),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Text("Login", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                SizedBox(height: 30),
+                TextField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelText: "Email",
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.email),
+                  ),
+                ),
+                SizedBox(height: 20),
+                TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: "Password",
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.lock),
+                  ),
+                ),
+                SizedBox(height: 30),
+                isLoading
+                    ? CircularProgressIndicator()
+                    : ElevatedButton(
+                        onPressed: loginUser,
+                        child: Text("Login"),
+                      ),
+              ],
             ),
-            SizedBox(height: 25),
-            TextField(
-              controller: passwordController,
-              decoration: InputDecoration(
-                  labelText: "Password", border: OutlineInputBorder()),
-              obscureText: true,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(onPressed: loginUser, child: Text("Login"))
-          ],
+          ),
         ),
       ),
     );
