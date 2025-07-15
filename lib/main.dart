@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:lavender_app/splash_screen.dart';
-
+import 'dashboard_screens/product/product_provider.dart';
+import 'package:provider/provider.dart';
 void main(){
   //root widget
-  runApp(Lavender_Root_Widget());
+  runApp(
+    MultiProvider(
+      providers:[
+    ChangeNotifierProvider(create: (_)=>ProductProvide()),
+  ],child: Lavender_Root_Widget(),
+  
+   ));
 }
 
 class Lavender_Root_Widget extends StatelessWidget{

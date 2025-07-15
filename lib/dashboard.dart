@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lavender_app/dashboard_screens/dashboard_cart.dart';
 import 'package:lavender_app/dashboard_screens/dashboard_home.dart';
 import 'package:lavender_app/dashboard_screens/dashboard_person.dart';
+import 'package:lavender_app/dashboard_screens/product/product_screen.dart';
 
 class Dashboard extends StatefulWidget{
   @override
@@ -12,7 +13,7 @@ class _Dashboard extends State<Dashboard>{
   int _currentIndex = 0;
   final List<Widget> _screens = [
     DashboardHome(),//0
-    DashboardCart(),//1
+    ProductScreen(),//1
     DashboardPerson()//2
   ];
   @override
